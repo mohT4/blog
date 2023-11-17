@@ -1,8 +1,15 @@
 const Blogs = require('../models/blogs');
+const ApiFeatures = require('../utils/ApiFeatures');
 
 exports.getOverView = async (req, res) => {
   try {
-    const blogs = await Blogs.find();
+    const features = new ApiFeatures(Blogs.find(), req.query)
+      .filter()
+      .sort()
+      .fields()
+      .limit();
+
+    const blogs = await features.query;
     res.status(200).render('index', {
       title: 'All Blogs',
       blogs,
